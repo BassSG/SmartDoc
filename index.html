@@ -1,26 +1,126 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <base target="_top">
-      <title>SmartDoc</title>
-      
-      <!-- Favicon -->
-      <link rel="icon" type="image/png" sizes="192x192" href="https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/63deb6c3-2565-4ba5-8f68-e38667e5030c_image.png?x-kcdn-pid=112372">
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+    <base target="_top">
+    <title>Chatbot</title>
+    
+    <!-- ส่วน icon สำหรับแท็บและ shortcut (ไม่แสดงในเนื้อหาของหน้าเว็บ) -->
+    <link rel="icon" type="image/png" href="https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/63deb6c3-2565-4ba5-8f68-e38667e5030c_image.png?x-kcdn-pid=112372">
+    <link rel="apple-touch-icon" href="https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/63deb6c3-2565-4ba5-8f68-e38667e5030c_image.png?x-kcdn-pid=112372">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Trip-Planner">
+    <meta name="theme-color" content="#4285f4">
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, 
+                         Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        /* โลโก้เว็บไซต์ที่แสดงในหน้าเว็บ */
+        
+        #app-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
 
-      <!-- Apple Touch Icon -->
-      <link rel="apple-touch-icon" sizes="180x180" href="https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/63deb6c3-2565-4ba5-8f68-e38667e5030c_image.png?x-kcdn-pid=112372">
+        /* Default: มือถือ */
+        .app-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #566573;
+            background-image: url("https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/dde78d6f-9c8b-4b8c-bed2-a871cdb04ffb_image.png?x-kcdn-pid=112372");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
 
-      <!-- Manifest (สำหรับ Android และ iOS ที่รองรับ) -->
-      <link rel="manifest" href="/manifest.json">
+        /* Desktop: จอกว้าง >= 768px */
+        @media (min-width: 768px) {
+            .app-splash {
+                background-image: url("https://s21-kling.klingai.com/bs2/upload-ylab-stunt-sgp/se/ai_portal_sgp_mmu_txt2img_aiweb_v15/ea601f9a-b907-42e3-9374-9c6dafa2f002_image.png?x-kcdn-pid=112372");
+            }
+        }
 
-      <!-- Theme Color -->
-      <meta name="theme-color" content="#ffffff">
-   </head>
-   <body>
-      <iframe 
-         style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;" 
-         src="https://script.google.com/macros/s/AKfycbwj-IoygLA8Yo-8Xo-tmDaZzpLxy5OIVy71lySldJFi2jAkKyRyun6BLC9ldjWjgK4kkg/exec">
-      </iframe>
-   </body>
+        @supports (padding: max(0px)) {
+            body {
+                padding-top: max(0px, env(safe-area-inset-top));
+                padding-bottom: max(0px, env(safe-area-inset-bottom));
+                padding-left: max(0px, env(safe-area-inset-left));
+                padding-right: max(0px, env(safe-area-inset-right));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-splash" id="splash-screen"></div>
+
+    <iframe id="app-container" 
+        src="https://script.google.com/macros/s/AKfycbwj-IoygLA8Yo-8Xo-tmDaZzpLxy5OIVy71lySldJFi2jAkKyRyun6BLC9ldjWjgK4kkg/exec">
+    </iframe>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(function() {
+                    splash.style.display = 'none';
+                }, 500);
+            }, 2000);
+        });
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.id !== 'app-container') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
 </html>
